@@ -5,6 +5,8 @@ import Home from '../views/Home.vue'
 import Test1 from '../views/Test1.vue'
 import Test2 from '../views/Test2.vue'
 
+
+
 const routes = [
   {
     path: '/',
