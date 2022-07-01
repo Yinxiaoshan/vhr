@@ -6,9 +6,6 @@
         <el-dropdown class="userInfo" @command="commandHandler">
           <span class="el-dropdown-link" >
             {{user.name}}<i><img :src="user.userface" alt=""></i>
-<!--            <el-icon class="el-icon&#45;&#45;right">-->
-<!--              <arrow-down />-->
-<!--            </el-icon>-->
           </span>
                 <template #dropdown>
                   <el-dropdown-menu>
@@ -21,10 +18,12 @@
       </el-header>
       <el-container>
         <el-aside>
-          <el-menu router>
-            <el-sub-menu index="1" v-for="(item,index) in this.$router.options.routes" v-show="!item.hidden" :key="index">
+          <el-menu router unique-opened>
+            <el-sub-menu :index="index+''" v-for="(item,index) in routes" v-show="!item.hidden" :key="index">
               <template #title>
-                <el-icon><location /></el-icon>
+<!--                <el-icon></el-icon>-->
+<!--                <location />-->
+                <i style="color: #1a16ff;margin-right: 5px;" :class="item.iconCls"></i>
                 <span>{{item.name}}</span>
               </template>
                 <el-menu-item :key="indexj" :index="child.path" v-for="(child,indexj) in item.children">{{child.name}}</el-menu-item>
@@ -32,7 +31,14 @@
           </el-menu>
         </el-aside>
         <el-main>
-          <router-view></router-view>
+          <el-breadcrumb :separator-icon="ArrowRight" v-show="this.$router.currentRoute.value.path != '/home'">
+            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>{{this.$router.currentRoute.value.name}}</el-breadcrumb-item>
+          </el-breadcrumb>
+          <div class="homeWelcome" v-show="this.$router.currentRoute.value.path == '/home'">
+            欢迎来到德莱联盟
+          </div>
+          <router-view class="homeRouterView"></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -49,24 +55,30 @@ export default {
       user:JSON.parse(window.sessionStorage.getItem("user"))
     }
   },
+  computed:{
+    routes(){
+      return this.$store.state.routes;
+    }
+  },
   methods:{
     // menuSwitch(index){
     //   this.$router.push(index)
     // },
-    commandHandler(name){
-      if (name === 'logout'){
+    commandHandler(cmd){
+      if (cmd === 'logout'){
         ElMessageBox.confirm(
             '确定注销登录?',
-            'Warning',
+            '提示',
             {
-              confirmButtonText: 'OK',
-              cancelButtonText: 'Cancel',
-              type: 'warning',
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: '提示',
             }
         )
             .then(() => {
               getRequest("/logout")
               window.sessionStorage.removeItem("user")
+              this.$store.commit('initRoutes',[]);
               this.$router.replace("/")
             })
             .catch(() => {
@@ -82,6 +94,9 @@ export default {
 </script>
 
 <style scoped>
+.homeRouterView{
+  margin-top: 15px;
+}
 .homeHeader{
   background-color: #9b5c9d;
   display: flex;
@@ -106,5 +121,12 @@ export default {
 .el-dropdown-link{
   display: flex;
   align-items: center;
+}
+.homeWelcome{
+  text-align: center;
+  font-size: 30px;
+  font-family: 华文行楷;
+  color: #ff2832;
+  padding-top: 50px ;
 }
 </style>

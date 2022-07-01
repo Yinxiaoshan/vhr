@@ -1,10 +1,12 @@
 <template>
-<h1>hello test1</h1>
+  <div>
+    奖惩规则
+  </div>
 </template>
 
 <script>
 export default {
-  name: "Test1"
+  name: "EcManage"
 }
 </script>
 

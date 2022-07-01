@@ -1,10 +1,12 @@
 <template>
-<h1>hello Test2</h1>
+  <div>
+    员工培训
+  </div>
 </template>
 
 <script>
 export default {
-  name: "Test2"
+  name: "PerTrain"
 }
 </script>
 
